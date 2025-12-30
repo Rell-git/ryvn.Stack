@@ -4,18 +4,24 @@
 <head>
     <meta charset="UTF-8">
     <title>ryvn.stack</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="manifest" href="manifest.json">
-
 </head>
 
 <body>
 
     <h1>ryvn.stack</h1>
-    <p>You downloaded it.</p>
 
-    <button id="installBtn" hidden>Install App</button>
+    <!-- WEBSITE VIEW -->
+    <div id="webView">
+        <p>This is the website version.</p>
+        <button id="installBtn" hidden>Install App</button>
+    </div>
+
+    <!-- APP VIEW -->
+    <div id="appView" hidden>
+        <p>You downloaded it.</p>
+    </div>
 
     <script src="app.js"></script>
 </body>

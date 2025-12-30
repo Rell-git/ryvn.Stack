@@ -2,10 +2,13 @@ const installBtn = document.getElementById("installBtn");
 const webView = document.getElementById("webView");
 const appView = document.getElementById("appView");
 
-let deferredPrompt;
+let deferredPrompt = null;
 
-/* CHECK IF INSTALLED */
-if (window.matchMedia("(display-mode: standalone)").matches) {
+/* CHECK IF RUNNING AS APP */
+if (
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true
+) {
     webView.hidden = true;
     appView.hidden = false;
 } else {
@@ -13,16 +16,22 @@ if (window.matchMedia("(display-mode: standalone)").matches) {
     appView.hidden = true;
 }
 
-/* INSTALL PROMPT */
+/* LISTEN FOR INSTALL EVENT */
 window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
+
+    // SHOW BUTTON ONLY WHEN READY
     installBtn.hidden = false;
 });
 
-/* INSTALL BUTTON CLICK */
+/* CLICK INSTALL */
 installBtn.addEventListener("click", async () => {
-    installBtn.hidden = true;
+    if (!deferredPrompt) {
+        alert("Install not available yet. Scroll or tap first.");
+        return;
+    }
+
     await deferredPrompt.prompt();
     deferredPrompt = null;
 });

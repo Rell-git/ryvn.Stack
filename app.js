@@ -4,34 +4,29 @@ const appView = document.getElementById("appView");
 
 let deferredPrompt = null;
 
-/* CHECK IF RUNNING AS APP */
+/* CHECK APP MODE */
 if (
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone === true
 ) {
     webView.hidden = true;
     appView.hidden = false;
-} else {
-    webView.hidden = false;
-    appView.hidden = true;
 }
 
-/* LISTEN FOR INSTALL EVENT */
+/* CAPTURE INSTALL EVENT */
 window.addEventListener("beforeinstallprompt", (e) => {
     e.preventDefault();
     deferredPrompt = e;
-
-    // SHOW BUTTON ONLY WHEN READY
-    installBtn.hidden = false;
 });
 
-/* CLICK INSTALL */
+/* INSTALL BUTTON */
 installBtn.addEventListener("click", async () => {
-    if (!deferredPrompt) {
-        alert("Install not available yet. Scroll or tap first.");
-        return;
+    if (deferredPrompt) {
+        await deferredPrompt.prompt();
+        deferredPrompt = null;
+    } else {
+        alert(
+            "Install not ready yet.\n\nUse Chrome menu → Add to Home Screen."
+        );
     }
-
-    await deferredPrompt.prompt();
-    deferredPrompt = null;
 });
